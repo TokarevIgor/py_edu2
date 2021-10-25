@@ -1,67 +1,32 @@
-# Проанализировать скорость и сложность одного любого алгоритма, разработанных в
-# рамках домашнего задания первых трех уроков.
-
-# В массиве случайных целых чисел поменять местами минимальный и максимальный элементы.
-import cProfile
-
-print('1 метод')
+import timeit
 
 
-def my_func():
-    import random
-
-    random_list = [random.randint(0, 100) for i in range(10)]
-    print(*random_list)
-
-    min_el = random_list[0]
-    max_el = random_list[1]
-
-    min_idx = 0
-    max_idx = 1
-    for i, item in enumerate(random_list):
-        if item <= min_el:
-            min_el = item
-            min_idx = i
-        elif item >= max_el:
-            max_el = item
-            max_idx = i
-
-    random_list[min_idx] = max_el
-    random_list[max_idx] = min_el
-
-    print('Результат:\n', *random_list)
+def cardinality_check1(numbers_dict):
+    for n in range(2, 200):
+        for k, i in numbers_dict.items():
+            if n % k == 0:
+                i += 1
+                numbers_dict[k] = i
 
 
-cProfile.run('my_func()')
-# 1182 function calls (1144 primitive calls) in 0.008 seconds
+numbers_dict = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
 
-print('2 метод')
-
-
-def my_func1():
-    import random
-
-    random_list = [random.randint(0, 100) for i in range(10)]
-    print(*random_list)
-
-    min_el = random_list[0]
-    max_el = random_list[1]
-
-    min_idx = 0
-    max_idx = 1
-    for i, item in enumerate(random_list):
-        if item <= min_el:
-            min_el = item
-            min_idx = i
-        elif item >= max_el:
-            max_el = item
-            max_idx = i
-
-    random_list[min_idx] = max_el
-    random_list[max_idx] = min_el
-
-    print('Результат:\n', *random_list)
+time1 = timeit.timeit(f'cardinality_check1({numbers_dict})',
+                      setup='from __main__ import cardinality_check1',
+                      number=1)
 
 
-cProfile.run('my_func1()')
+def cardinality_check2():
+    final_dict = dict.fromkeys(range(2, 10), 0)
+    for num in range(2, 200):
+        for i in range(2, 10):
+            if num % i == 0:
+                final_dict[i] += 1
 
+
+time2 = timeit.timeit(f'cardinality_check2()',
+                      setup='from __main__ import cardinality_check2',
+                      number=1)
+
+print('Первый вариант: {}'.format(time1))
+print('Второй вариант: {}'.format(time2))
